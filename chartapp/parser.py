@@ -7,10 +7,11 @@ def parser():
     accounts = []
     balance = []
     scraper = cloudscraper.create_scraper()
-    site = scraper.get("https://etherscan.io/accounts/1?ps=100")
-    soup = BeautifulSoup(site.text, 'html.parser')
-    links = soup.findAll("a")
+    url = scraper.get("https://etherscan.io/accounts/1?ps=100")
+    soup = BeautifulSoup(url.text, 'html.parser')
     cells = soup.findAll("td")
+    links = soup.findAll("a")
+
     for i in links:
         if(i.text.startswith("0x")):
             accounts.append(i.text)
@@ -22,5 +23,5 @@ def parser():
         elif any(c.isdigit() for c in i.text) and i.find(text=re.compile("Ether")):
             result = float(i.text.rpartition("Ether")[0].replace(',', ''))
             balance.append(result)
-    return balance, accounts
 
+    return balance, accounts
